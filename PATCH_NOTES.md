@@ -1,5 +1,9 @@
 # Reactive Markets - patch notes
 
+## 1.4.0.2
+
+- Passes the GIANTS TestRunner: changelog added to the English and German descriptions, duplicate German title removed.
+
 ## 1.4.0.1
 
 First test build. Buyers now react to each other:
