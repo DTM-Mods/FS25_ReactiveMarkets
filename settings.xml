@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+    Reactive Markets settings. On first start this file is copied to
+    modSettings/FS25_ReactiveMarkets.xml; edit THAT copy (it is read on savegame load).
+
+    limits     min/max price factor a buyer can reach (1.00 = normal game price)
+    steps      seller: share of the gap to "min" closed by one batch sold at a buyer
+               rival:  share of the gap to "max" closed at every other buyer of that crop
+               batchLiters: the normal batch size (one batch = one step)
+    allowance  litres a buyer takes of one crop before its price starts to move (drains
+               back over the recovery time, like the prices)
+    recovery   days until a buyer is ~95% back to normal
+    debug      print every sale and its effect to log.txt
+    fillTypes  per fill type: batchLiters="..." to change its batch, enabled="false" to leave it out
+-->
+<reactiveMarkets>
+    <limits min="0.85" max="1.15"/>
+    <steps seller="0.04" rival="0.02" batchLiters="30000"/>
+    <allowance liters="200000"/>
+    <recovery days="6"/>
+    <debug enabled="true"/>
+    <fillTypes>
+        <fillType name="MILK" batchLiters="20000"/>
+    </fillTypes>
+</reactiveMarkets>

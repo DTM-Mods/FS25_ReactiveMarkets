@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<modDesc descVersion="116">
+    <author>PropaineX</author>
+    <version>1.4.0.0</version>
+    <title>
+        <en>Reactive Markets</en>
+    </title>
+    <description>
+        <en><![CDATA[Buyers react to each other.
+
+When you sell at a buyer, that buyer's price for the crop dips a little, and every other buyer of that crop raises its price a little to win the next load. Prices drift back to normal over a few in-game days. Seasons and great demand still work as normal on top.
+
+- Each buyer takes 200,000 l of a crop before its price starts to move (the allowance refills over a few days)
+- Past that, the effect scales with the amount sold (about -2% at the buyer and +1% at the rivals per 120,000 l)
+- After each load past the allowance, the other buyers (except the one paying most) also get a small random +0.5% to +1.5%, so they climb in a random order
+- Hard limit of -15% / +15%, with smaller steps near the limit
+- Prices recover over about 6 in-game days
+- Saved with the savegame
+- Settings in modSettings/FS25_ReactiveMarkets.xml
+
+ESC menu: the "Reactive Markets" page (under Production Chains) lists the crops you have in stock; click one to see every buyer with its price, change from normal, free allowance left and a 6-day graph. Keyboard D / controller: show all crops.
+
+Console: rmShow [fillType] lists each buyer's current factor, rmReset clears all factors.
+
+Multiplayer: the server works out the prices and sends them to every player.
+
+Do not use together with other mods that change selling prices: Market Dynamics, Dynamic Market, Volatile Economy, Supply And Demand. They change the same prices and the results will clash.]]></en>
+    </description>
+    <iconFilename>icon_ReactiveMarkets.dds</iconFilename>
+    <multiplayer supported="true"/>
+    <extraSourceFiles>
+        <sourceFile filename="scripts/ReactiveMarketsSyncEvent.lua"/>
+        <sourceFile filename="scripts/ReactiveMarkets.lua"/>
+        <sourceFile filename="scripts/ReactiveMarketsFrame.lua"/>
+    </extraSourceFiles>
+</modDesc>

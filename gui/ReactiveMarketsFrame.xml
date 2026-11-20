@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!-- Reactive Markets ESC page (design: previews/trend_screen_v3.png, user OK'd 2026-11-19).
+     Header + tabs use the game's own profiles (same layout as Player Trading+). The table, allowance bars and graphs
+     are drawn by ReactiveMarketsFrame:draw() inside the "content" container, so no image atlas is needed. -->
+<GUI name="ReactiveMarketsFrame">
+    <GuiElement profile="fs25_menuContainer">
+        <GuiElement profile="fs25_menuHeaderPanel" position="-62px 92px">
+            <Bitmap profile="fs25_menuHeaderIconBg">
+                <Bitmap profile="fs25_menuHeaderIcon" id="headerIcon"/>
+            </Bitmap>
+            <Text profile="fs25_menuHeaderTitle" text="REACTIVE MARKETS"/>
+        </GuiElement>
+
+        <BoxLayout profile="fs25_subCategorySelectorTabbedBox">
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="tabs[1]" text="MARKET" onClick="onClickTabMarket">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="tabs[2]" text="HISTORY" onClick="onClickTabHistory">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="tabs[3]" text="SETTINGS" onClick="onClickTabSettings">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+        </BoxLayout>
+        <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="-63px -57px" size="100% 2dp"/>
+
+        <!-- everything inside is drawn in Lua -->
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="content"/>
+    </GuiElement>
+</GUI>
