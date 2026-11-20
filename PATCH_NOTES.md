@@ -1,6 +1,6 @@
 # Reactive Markets - patch notes
 
-## 1.4.0.0
+## 1.4.0.1
 
 First test build. Buyers now react to each other:
 

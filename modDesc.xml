@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="116">
     <author>PropaineX</author>
-    <version>1.4.0.0</version>
+    <version>1.4.0.1</version>
     <title>
         <en>Reactive Markets</en>
+        <de>Reactive Markets</de>
     </title>
     <description>
         <en><![CDATA[Buyers react to each other.
@@ -25,6 +26,25 @@ Console: rmShow [fillType] lists each buyer's current factor, rmReset clears all
 Multiplayer: the server works out the prices and sends them to every player.
 
 Do not use together with other mods that change selling prices: Market Dynamics, Dynamic Market, Volatile Economy, Supply And Demand. They change the same prices and the results will clash.]]></en>
+        <de><![CDATA[Händler reagieren aufeinander.
+
+Wenn du bei einem Händler verkaufst, sinkt dessen Preis für die Frucht ein wenig, und alle anderen Händler dieser Frucht erhöhen ihren Preis ein wenig, um deine nächste Ladung zu bekommen. Die Preise gehen im Lauf einiger Spieltage wieder auf normal zurück. Jahreszeiten und hohe Nachfrage wirken weiterhin wie gewohnt.
+
+- Jeder Händler nimmt 200.000 l einer Frucht, bevor sich sein Preis bewegt (das Kontingent füllt sich in einigen Tagen wieder auf)
+- Darüber hinaus wächst die Wirkung mit der verkauften Menge (etwa -2 % beim Händler und +1 % bei den Konkurrenten je 120.000 l)
+- Nach jeder Ladung über dem Kontingent bekommen die anderen Händler (außer dem, der am meisten zahlt) zusätzlich zufällig +0,5 % bis +1,5 %, damit sie in zufälliger Reihenfolge aufsteigen
+- Grenzen von -15 % / +15 %, mit kleineren Schritten nahe der Grenze
+- Die Preise erholen sich in etwa 6 Spieltagen
+- Wird mit dem Spielstand gespeichert
+- Einstellungen in modSettings/FS25_ReactiveMarkets.xml
+
+ESC-Menü: Die Seite "Reactive Markets" (unter Produktionsketten) zeigt deine Früchte im Lager; klicke eine an, um alle Händler mit Preis, Abweichung vom Normalpreis, freiem Kontingent und Verlaufsgrafik zu sehen. Tastatur D / Controller: alle Früchte anzeigen.
+
+Konsole: rmShow [Fruchtart] zeigt die Faktoren der Händler, rmReset setzt alle Faktoren zurück.
+
+Mehrspieler: Der Server berechnet die Preise und schickt sie an alle Spieler.
+
+Nicht zusammen mit anderen Mods verwenden, die Verkaufspreise ändern: Market Dynamics, Dynamic Market, Volatile Economy, Supply And Demand. Sie ändern dieselben Preise, und die Ergebnisse vertragen sich nicht.]]></de>
     </description>
     <iconFilename>icon_ReactiveMarkets.dds</iconFilename>
     <multiplayer supported="true"/>

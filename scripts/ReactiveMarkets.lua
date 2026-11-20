@@ -158,8 +158,13 @@ function RM.loadSettings()
     if g_modSettingsDirectory ~= nil then
         userPath = g_modSettingsDirectory .. RM.MOD_NAME .. ".xml"
         if not fileExists(userPath) then
-            pcall(createFolder, g_modSettingsDirectory)
-            pcall(copyFile, defaultPath, userPath, false)
+            -- plain calls (ModHub: no protected calls); both are engine functions in FS25
+            if createFolder ~= nil then
+                createFolder(g_modSettingsDirectory)
+            end
+            if copyFile ~= nil then
+                copyFile(defaultPath, userPath, false)
+            end
         end
     end
     if RM.readSettingsFile(userPath) then
@@ -234,8 +239,8 @@ end
 
 function RM.getStationName(station)
     if station.getName ~= nil then
-        local ok, name = pcall(station.getName, station)
-        if ok and name ~= nil then
+        local name = station:getName()
+        if name ~= nil then
             return tostring(name)
         end
     end
