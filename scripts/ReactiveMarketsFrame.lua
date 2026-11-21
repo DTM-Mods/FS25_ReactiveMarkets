@@ -415,6 +415,14 @@ local function rect(x, y, w, h, c)
     drawFilledRect(x, y, w, h, c[1], c[2], c[3], c[4])
 end
 
+-- Horizontal reference unit. u is a share of the screen HEIGHT, x positions are shares of the screen WIDTH, so a
+-- horizontal gap written as n * u grew with the aspect ratio (32:9 in game 2026-11-21: the buyer column shrank
+-- to nothing and every name showed as "G...", "P..."). ux equals u on 16:9 (the layout was tuned there) and
+-- keeps the same on-screen size on wider and narrower screens.
+local function hUnit(u)
+    return u * (16 / 9) / g_screenAspectRatio
+end
+
 local function text(x, y, size, str, c, align, bold)
     setTextBold(bold == true)
     setTextColor(c[1], c[2], c[3], c[4])
@@ -581,9 +589,10 @@ function RMF:draw()
 end
 
 function RMF:drawCropList(x, top, w, u)
+    local ux = hUnit(u)
     local headY = top - 12 * u
-    text(x + 10 * u, headY, 15 * u, self.showAll and "ALL CROPS" or "YOUR CROPS", GREY, RenderText.ALIGN_LEFT, true)
-    text(x + w - 18 * u, headY, 15 * u, "YOU HAVE", GREY, RenderText.ALIGN_RIGHT, true)
+    text(x + 10 * ux, headY, 15 * u, self.showAll and "ALL CROPS" or "YOUR CROPS", GREY, RenderText.ALIGN_LEFT, true)
+    text(x + w - 18 * ux, headY, 15 * u, "YOU HAVE", GREY, RenderText.ALIGN_RIGHT, true)
     rect(x, top - 26 * u, w, 1 * u, R_GRID)
 
     local rowH = 43 * u
@@ -592,7 +601,7 @@ function RMF:drawCropList(x, top, w, u)
     local shown = math.min(RMF.LIST_ROWS, n - self.listOffset)
     self.rowBoxes = {}
     self.listBox = {x = x, y = listTop - RMF.LIST_ROWS * rowH, w = w, h = RMF.LIST_ROWS * rowH}
-    local barW = 5 * u / g_screenAspectRatio * 1.78
+    local barW = 5 * ux
     for i = 1, shown do
         local c = self.crops[self.listOffset + i]
         local rt = listTop - (i - 1) * rowH
@@ -601,12 +610,12 @@ function RMF:drawCropList(x, top, w, u)
         local bg = sel and R_GREEN or (c.index == self.hoverFt and lin(62, 62, 62) or ((self.listOffset + i) % 2 == 0 and R_ROW2 or R_ROW1))
         rect(x, rt - rowH + 2 * u, w - barW * 3, rowH - 2 * u, bg)
         local fillType = g_fillTypeManager:getFillTypeByIndex(c.index)
-        local iw = self:drawIcon(fillType, x + 8 * u, cy, 31 * u)
+        local iw = self:drawIcon(fillType, x + 8 * ux, cy, 31 * u)
         local tc = sel and DARK or WHITE
         local amount = c.have > 0 and liters(c.have) or "-"
         local amountW = getTextWidth(17 * u, amount)
-        text(x + 16 * u + iw, cy, 20 * u, fit(c.title, 20 * u, w - iw - amountW - 60 * u), tc, RenderText.ALIGN_LEFT, true)
-        text(x + w - barW * 3 - 10 * u, cy, 17 * u, amount, sel and DARK or GREY, RenderText.ALIGN_RIGHT)
+        text(x + 16 * ux + iw, cy, 20 * u, fit(c.title, 20 * u, w - iw - amountW - 60 * ux), tc, RenderText.ALIGN_LEFT, true)
+        text(x + w - barW * 3 - 10 * ux, cy, 17 * u, amount, sel and DARK or GREY, RenderText.ALIGN_RIGHT)
         table.insert(self.rowBoxes, {y = rt - rowH, h = rowH, ft = c.index})
     end
     -- scroll bar
@@ -618,7 +627,7 @@ function RMF:drawCropList(x, top, w, u)
         rect(x + w - barW, thumbY, barW, thumbH, lin(150, 150, 150))
     end
     local footY = listTop - RMF.LIST_ROWS * rowH - 20 * u
-    text(x + 10 * u, footY, 13 * u, self.showAll and "Every crop a buyer takes." or
+    text(x + 10 * ux, footY, 13 * u, self.showAll and "Every crop a buyer takes." or
         "Only crops you have and can sell (no robots, no production inputs).", GREY)
 end
 
@@ -626,15 +635,16 @@ end
 function RMF:drawCropHeader(x, top, w, u, ft, rows)
     local fillType = g_fillTypeManager:getFillTypeByIndex(ft)
     local title = fillType ~= nil and (fillType.title or fillType.name) or "?"
+    local ux = hUnit(u)
     local cy = top - 16 * u
     local iw = self:drawIcon(fillType, x, cy, 34 * u)
-    local tx = x + (iw > 0 and iw + 10 * u or 0)
+    local tx = x + (iw > 0 and iw + 10 * ux or 0)
     setTextBold(true)
     text(tx, cy, 26 * u, title, WHITE, RenderText.ALIGN_LEFT, true)
     local have = self.stock[ft] or 0
     setTextBold(true)
     local titleW = getTextWidth(26 * u, title)
-    text(tx + titleW + 18 * u, cy, 16 * u, have > 0 and ("you have " .. liters(have)) or "you have none", GREY)
+    text(tx + titleW + 18 * ux, cy, 16 * u, have > 0 and ("you have " .. liters(have)) or "you have none", GREY)
     local best = rows[1]
     if best ~= nil then
         local lsize = 16 * u
@@ -678,7 +688,8 @@ function RMF.getGraphSpanText()
 end
 
 function RMF:drawMarket(x, top, w, u, rows)
-    local cName, cPrice, cPct, cBar, cGraph = x + 14 * u, x + w * 0.40, x + w * 0.53, x + w * 0.62, x + w * 0.84
+    local ux = hUnit(u)
+    local cName, cPrice, cPct, cBar, cGraph = x + 14 * ux, x + w * 0.40, x + w * 0.53, x + w * 0.62, x + w * 0.84
     local headY = top - 4 * u
     text(cName, headY, 16 * u, "BUYER", GREY, RenderText.ALIGN_LEFT, true)
     text(cPrice, headY, 16 * u, "PRICE / 1,000 l", GREY, RenderText.ALIGN_CENTER, true)
@@ -705,7 +716,7 @@ function RMF:drawMarket(x, top, w, u, rows)
         rect(x, rowTop - rowH + 3 * u, w, rowH - 3 * u, best and R_GREEN or (i % 2 == 0 and R_ROW2 or R_ROW1))
         local pct, pctColor, lineColor = pctText(r.factor)
         local tc = best and DARK or WHITE
-        text(cName, cy, 20 * u, fit(r.name, 20 * u, cPrice - cName - 80 * u), tc, RenderText.ALIGN_LEFT, true)
+        text(cName, cy, 20 * u, fit(r.name, 20 * u, cPrice - cName - 80 * ux), tc, RenderText.ALIGN_LEFT, true)
         text(cPrice, cy, 20 * u, money(r.price), best and DARK or pctColor, RenderText.ALIGN_CENTER, true)
         text(cPct, cy, 20 * u, pct, best and DARK or pctColor, RenderText.ALIGN_CENTER, true)
 
@@ -716,7 +727,7 @@ function RMF:drawMarket(x, top, w, u, rows)
         if f > 0 then
             rect(cBar, cy - barH / 2, barW * f, barH, best and lin(235, 235, 230) or R_FILL)
         end
-        text(cBar + barW + 8 * u, cy, 15 * u, liters(r.allowanceLeft), best and DARK or GREY)
+        text(cBar + barW + 8 * ux, cy, 15 * u, liters(r.allowanceLeft), best and DARK or GREY)
 
         -- 6-day graph, centre line = normal price, top / bottom = the price limits
         local gw, gh = w * 0.14, rowH - 12 * u
@@ -745,13 +756,14 @@ function RMF:drawMarket(x, top, w, u, rows)
         local yy = ky - 26 * u - ((i - 1) % 2) * 24 * u
         local xx = cName + col * colW
         rect(xx, yy - box / 2, box / g_screenAspectRatio, box, b.rect)
-        local rx = xx + box / g_screenAspectRatio + 12 * u
+        local rx = xx + box / g_screenAspectRatio + 12 * ux
         text(rx, yy, 15 * u, b.range, b.color, RenderText.ALIGN_LEFT, true)
-        text(rx + rangeW + 20 * u, yy, 15 * u, b.label, WHITE)
+        text(rx + rangeW + 20 * ux, yy, 15 * u, b.label, WHITE)
     end
 end
 
 function RMF:drawHistory(x, top, w, h, u, rows)
+    local ux = hUnit(u)
     local gx, gw = x + w * 0.07, w * 0.58
     local gh = h - 50 * u
     local gy = top - 10 * u - gh
@@ -760,13 +772,13 @@ function RMF:drawHistory(x, top, w, h, u, rows)
     for _, lv in ipairs({0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15}) do
         local ly = gy + gh / 2 + (lv - 1) / range * gh / 2
         rect(gx, ly, gw, 1 * u, lv == 1 and R_MID or R_GRID)
-        text(gx - 8 * u, ly, 13 * u, string.format("%+d%%", math.floor((lv - 1) * 100 + 0.5)), GREY, RenderText.ALIGN_RIGHT)
+        text(gx - 8 * ux, ly, 13 * u, string.format("%+d%%", math.floor((lv - 1) * 100 + 0.5)), GREY, RenderText.ALIGN_RIGHT)
     end
     text(gx, gy - 14 * u, 13 * u, "6 days ago", GREY)
     text(gx + gw, gy - 14 * u, 13 * u, "now", GREY, RenderText.ALIGN_RIGHT)
 
-    local lx = gx + gw + 24 * u
-    local maxName = x + w - lx - 90 * u
+    local lx = gx + gw + 24 * ux
+    local maxName = x + w - lx - 90 * ux
     for i, r in ipairs(rows) do
         local ly = top - 10 * u - (i - 1) * 28 * u
         if i > #LINES then
@@ -774,14 +786,15 @@ function RMF:drawHistory(x, top, w, h, u, rows)
             break
         end
         graph(gx, gy, gw, gh, r.history, LINES[i], range, 3 * u)
-        rect(lx, ly - 5 * u, 10 * u, 10 * u, LINES[i])
+        rect(lx, ly - 5 * u, 10 * ux, 10 * u, LINES[i])
         local pct = pctText(r.factor)
-        text(lx + 18 * u, ly, 15 * u, fit(r.name, 15 * u, maxName), LINES_TEXT[i])
+        text(lx + 18 * ux, ly, 15 * u, fit(r.name, 15 * u, maxName), LINES_TEXT[i])
         text(x + w, ly, 15 * u, pct, LINES_TEXT[i], RenderText.ALIGN_RIGHT, true)
     end
 end
 
 function RMF:drawSettings(x, top, w, u)
+    local ux = hUnit(u)
     local s = ReactiveMarkets.settings
     local lines = {
         {"Free allowance per buyer and crop", liters(s.allowanceLiters)},
@@ -794,8 +807,8 @@ function RMF:drawSettings(x, top, w, u)
     for i, l in ipairs(lines) do
         local cy = top - 30 * u - (i - 1) * 40 * u
         rect(x, cy - 18 * u, w * 0.6, 37 * u, i % 2 == 0 and R_ROW2 or R_ROW1)
-        text(x + 20 * u, cy, 18 * u, l[1], WHITE, RenderText.ALIGN_LEFT, true)
-        text(x + w * 0.6 - 20 * u, cy, 18 * u, l[2], UP, RenderText.ALIGN_RIGHT, true)
+        text(x + 20 * ux, cy, 18 * u, l[1], WHITE, RenderText.ALIGN_LEFT, true)
+        text(x + w * 0.6 - 20 * ux, cy, 18 * u, l[2], UP, RenderText.ALIGN_RIGHT, true)
     end
     local fy = top - 30 * u - #lines * 40 * u - 20 * u
     text(x, fy, 14 * u, "These are read when a savegame loads, from modSettings/FS25_ReactiveMarkets.xml (on a server: the server's copy).", GREY)

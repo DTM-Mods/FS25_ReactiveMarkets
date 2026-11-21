@@ -1,5 +1,9 @@
 # Reactive Markets - patch notes
 
+## 1.4.0.3
+
+- ESC page: buyer names were cut to one letter ("G...", "P...") on ultrawide screens. Gaps and columns now keep the same size on every screen shape (16:9, 21:9, 32:9).
+
 ## 1.4.0.2
 
 - Passes the GIANTS TestRunner: changelog added to the English and German descriptions, duplicate German title removed.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="116">
     <author>PropaineX</author>
-    <version>1.4.0.2</version>
+    <version>1.4.0.3</version>
     <title>
         <en>Reactive Markets</en>
     </title>
@@ -26,6 +26,9 @@ Multiplayer: the server works out the prices and sends them to every player.
 
 Do not use together with other mods that change selling prices: Market Dynamics, Dynamic Market, Volatile Economy, Supply And Demand. They change the same prices and the results will clash.
 
+Changelog 1.4.0.3:
+- ESC page: buyer names are no longer cut to one letter on ultrawide screens (21:9, 32:9)
+
 Changelog 1.4.0.2:
 - German description added
 - Error handling reworked for the GIANTS mod checks (no change in game)]]></en>
@@ -48,6 +51,9 @@ Konsole: rmShow [Fruchtart] zeigt die Faktoren der Händler, rmReset setzt alle 
 Mehrspieler: Der Server berechnet die Preise und schickt sie an alle Spieler.
 
 Nicht zusammen mit anderen Mods verwenden, die Verkaufspreise ändern: Market Dynamics, Dynamic Market, Volatile Economy, Supply And Demand. Sie ändern dieselben Preise, und die Ergebnisse vertragen sich nicht.
+
+Änderungen 1.4.0.3:
+- ESC-Seite: Händlernamen werden auf Ultrawide-Bildschirmen (21:9, 32:9) nicht mehr auf einen Buchstaben gekürzt
 
 Änderungen 1.4.0.2:
 - Deutsche Beschreibung hinzugefügt
